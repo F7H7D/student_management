@@ -8,6 +8,7 @@ from tkinter import ttk
 
 from services.student_service import StudentService
 from services.pdf_service import PDFService
+from services.file_opener import open_file
 
 
 class RegistrationPage(ttk.Frame):
@@ -144,11 +145,12 @@ class RegistrationPage(ttk.Frame):
                 parent=self,
             )
         else:
-            messagebox.showinfo(
-                "Success",
-                f"Student saved successfully. S.I.N: {student.sin}\nPDF created at: {pdf_path}",
-                parent=self,
-            )
+            message = f"Student saved successfully. S.I.N: {student.sin}\nPDF created at: {pdf_path}"
+            try:
+                open_file(pdf_path)
+            except Exception as exc:
+                message += f"\n\nCould not open the PDF automatically: {exc}"
+            messagebox.showinfo("Success", message, parent=self)
             if callable(self.on_saved):
                 self.on_saved(student)
             return

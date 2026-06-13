@@ -7,6 +7,7 @@ from tkinter import StringVar, Text, messagebox
 from tkinter import ttk
 
 from services.fee_service import FeeService
+from services.file_opener import open_file
 from services.pdf_service import PDFService
 from services.student_service import StudentService
 
@@ -170,4 +171,9 @@ class FeePage(ttk.Frame):
             messagebox.showerror("Error", f"Unable to generate fee PDF: {exc}", parent=self)
             return
 
-        messagebox.showinfo("Success", f"Fee PDF generated successfully at:\n{pdf_path}", parent=self)
+        message = f"Fee PDF generated successfully at:\n{pdf_path}"
+        try:
+            open_file(pdf_path)
+        except Exception as exc:
+            message += f"\n\nCould not open the PDF automatically: {exc}"
+        messagebox.showinfo("Success", message, parent=self)

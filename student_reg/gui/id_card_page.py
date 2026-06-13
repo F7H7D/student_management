@@ -8,6 +8,7 @@ from pathlib import Path
 
 from services.id_card_service import IDCardService
 from services.student_service import StudentService
+from services.file_opener import open_file
 
 
 class IDCardPage(ttk.Frame):
@@ -83,4 +84,9 @@ class IDCardPage(ttk.Frame):
             messagebox.showerror("Error", f"Unable to generate ID card: {exc}", parent=self)
             return
 
-        messagebox.showinfo("Success", f"ID card generated successfully:\n{Path(pdf_path)}", parent=self)
+        message = f"ID card generated successfully:\n{Path(pdf_path)}"
+        try:
+            open_file(pdf_path)
+        except Exception as exc:
+            message += f"\n\nCould not open the PDF automatically: {exc}"
+        messagebox.showinfo("Success", message, parent=self)
