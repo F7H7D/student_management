@@ -689,7 +689,12 @@ class ParishilonAcademyRoot(BoxLayout):
         self.add_widget(make_label("Desktop and Android-ready student management system.", color=(0.40, 0.44, 0.51, 1), size_hint_y=None, height=dp(24)))
 
         scroll = ScrollView(size_hint_y=None, height=dp(56), do_scroll_y=False, do_scroll_x=True)
-        nav = BoxLayout(size_hint_x=None, height=dp(44), spacing=dp(8))
+        nav = BoxLayout(
+            orientation="horizontal",
+            size_hint=(None, None),
+            height=dp(44),
+            spacing=dp(8),
+        )
         nav.bind(minimum_width=nav.setter("width"))
         for title, screen_name in [
             ("Registration", "registration"),
@@ -699,7 +704,10 @@ class ParishilonAcademyRoot(BoxLayout):
             ("ID Card", "idcard"),
             ("Admin Panel", "admin"),
         ]:
-            nav.add_widget(make_button(title, lambda _btn, name=screen_name: self.switch_to(name), primary=False))
+            button = make_button(title, lambda _btn, name=screen_name: self.switch_to(name), primary=False)
+            button.size_hint_x = None
+            button.width = dp(150)
+            nav.add_widget(button)
         scroll.add_widget(nav)
         self.add_widget(scroll)
 
