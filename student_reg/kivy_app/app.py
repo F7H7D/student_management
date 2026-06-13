@@ -19,6 +19,7 @@ from kivy.uix.spinner import Spinner
 from kivy.uix.textinput import TextInput
 
 from services.fee_service import FeeService
+from services.file_opener import open_file
 from services.id_card_service import IDCardService
 from services.pdf_service import PDFService
 from services.student_service import StudentService
@@ -226,7 +227,12 @@ class RegistrationScreen(BaseScreen):
                 return
 
             self.root_widget().refresh_all()
-            self.notify("Success", f"Student saved successfully. S.I.N: {student.sin}\nPDF created at: {pdf_path}")
+            message = f"Student saved successfully. S.I.N: {student.sin}\nPDF created at: {pdf_path}"
+            try:
+                open_file(pdf_path)
+            except Exception as exc:
+                message += f"\n\nCould not open the PDF automatically: {exc}"
+            self.notify("Success", message)
 
         self.confirm("Confirm Save", "Save this student record now?", do_save)
 
@@ -484,7 +490,12 @@ class FeeScreen(BaseScreen):
             self.notify("Error", f"Unable to generate fee PDF: {exc}")
             return
 
-        self.notify("Success", f"Fee PDF generated successfully at:\n{pdf_path}")
+        message = f"Fee PDF generated successfully at:\n{pdf_path}"
+        try:
+            open_file(pdf_path)
+        except Exception as exc:
+            message += f"\n\nCould not open the PDF automatically: {exc}"
+        self.notify("Success", message)
 
 
 class IdCardScreen(BaseScreen):
@@ -550,7 +561,12 @@ class IdCardScreen(BaseScreen):
             self.notify("Error", f"Unable to generate ID card: {exc}")
             return
 
-        self.notify("Success", f"ID card generated successfully:\n{pdf_path}")
+        message = f"ID card generated successfully:\n{pdf_path}"
+        try:
+            open_file(pdf_path)
+        except Exception as exc:
+            message += f"\n\nCould not open the PDF automatically: {exc}"
+        self.notify("Success", message)
 
 
 class AdminScreen(BaseScreen):
